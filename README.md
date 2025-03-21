@@ -13,44 +13,44 @@
     <br>
 </p>
 
-Easy-Translate is a script for translating large text files with a 💥SINGLE COMMAND💥. Easy-Translate is designed to be as easy as possible for **beginners** and as **seamless** and **customizable** as possible for advanced users. 
-We support almost any model, including [M2M100](https://arxiv.org/pdf/2010.11125.pdf),
-[NLLB200](https://research.facebook.com/publications/no-language-left-behind/), 
-[LLaMA](https://ai.facebook.com/blog/large-language-model-llama-meta-ai/),
-[Bloom](https://bigscience.notion.site/BLOOM-BigScience-176B-Model-ad073ca07cdf479398d5f95d88e218c4) and more 🥳. 
-We also provide a [script](#evaluate-translations) for Easy-Evaluation of your translations 📋
+```
+Easy-Translate 是一个通过💥单行命令💥翻译大型文本文件的脚本。该工具旨在为**初学者**提供最简单易用的体验，同时为高级用户保持**无缝衔接**和**高度可定制**的特性。
+我们支持几乎所有主流模型，包括 [M2M100](https://arxiv.org/pdf/2010.11125.pdf)、
+[NLLB200](https://research.facebook.com/publications/no-language-left-behind/)、
+[LLaMA](https://ai.facebook.com/blog/large-language-model-llama-meta-ai/)、
+[Bloom](https://bigscience.notion.site/BLOOM-BigScience-176B-Model-ad073ca07cdf479398d5f95d88e218c4) 等更多模型 🥳。
+我们还提供了用于[评估翻译结果](#evaluate-translations)的脚本 📋
+```
 
-Easy-Translate is built on top of 🤗HuggingFace's [Transformers](https://huggingface.co/docs/transformers/index) and 🤗HuggingFace's [Accelerate](https://huggingface.co/docs/accelerate/index) library.
-
-
-We currently support:
-
-- CPU / multi-CPU / GPU / multi-GPU / TPU acceleration
-- BF16 / FP16 / FP32 / 8 Bits / 4 Bits precision.
-- Automatic batch size finder: Forget CUDA OOM errors. Set an initial batch size, if it doesn't fit, we will automatically adjust it.
-- Multiple decoding strategies: Greedy Search, Beam Search, Top-K Sampling, Top-p (nucleus) sampling, etc. See [Decoding Strategies](#decodingsampling-strategies) for more information.
-- :new: Load huge models in a single GPU with 8-bits / 4-bits quantization and support for splitting the model between GPU and CPU. See [Loading Huge Models](#loading-huge-models) for more information.
-- :new: LoRA models support 
-- :new: Support for any Seq2SeqLM or CausalLM model from HuggingFace's Hub.
-- :new: Prompt support! See [Prompting](#prompting) for more information.
-
->Test the 🔌 Online Demo here: <https://huggingface.co/spaces/Iker/Translate-100-languages>
+Easy Translate建立在🤗HuggingFace's [Transformers](https://huggingface.co/docs/transformers/index) 和 🤗HuggingFace's [Accelerate](https://huggingface.co/docs/accelerate/index) 仓库.
 
 
+我们目前支持：
+-CPU/多CPU/GPU/多GPU/TPU加速
+-BF16/FP16/FP32/8位/4位精度。
+-自动批量查找器：忘记CUDA OOM错误。设置初始批量大小，如果不合适，我们将自动调整它。
+-多种解码策略：贪婪搜索、波束搜索、Top-K采样、Top-p（核）采样等。有关更多信息，请参阅[解码策略]（#解码采样策略）。
+-：新增：在单个GPU中加载大型模型，采用8位/4位量化，并支持在GPU和CPU之间分割模型。有关更多信息，请参阅[加载大型模型]（#加载大型模型）。
+-：新增：支持LoRA模型-：new：支持HuggingFace Hub的任何Seq2SeqLM或CausalLM模型。
+-：新增：及时支持！有关更多信息，请参阅[提示]（#promining）。
+>测试🔌 在线演示：<https://huggingface.co/spaces/Iker/Translate-100-languages>
 
-## Supported languages
 
-See the [Supported languages table](supported_languages.md) for a table of the supported languages and their ids.
 
-## Supported Models
+##支持的语言
 
-💥 EasyTranslate now supports any Seq2SeqLM (m2m100, nllb200, small100, mbart, MarianMT, T5, FlanT5, etc.) and any CausalLM (GPT2, LLaMA, Vicuna, Falcon) model from  🤗 Hugging Face's Hub!!
-We still recommend you to use M2M100 or NLLB200 for the best results, but you can experiment with any other MT model, as well as prompting LLMs to generate translations (See [Prompting Section](#prompting) for more details). 
-You can also see [the examples folder](examples) for examples of how to use EasyTranslate with different models.
+有关支持的语言及其ID的表，请参阅[支持的语言表]（Supported_languages.md）。
+
+
+
+##支持的型号💥 
+EasyTranslate现在支持以下任何Seq2SeqLM（m2m100、nllb200、small100、mbart、MarianMT、T5、FlanT5等）和任何CausalLM（GPT2、LLaMA、Vicuna、Falcon）模型🤗 拥抱脸的枢纽！！
+我们仍然建议您使用M2M100或NLLB200以获得最佳结果，但您可以尝试任何其他MT模型，以及提示LLM生成翻译（有关更多详细信息，请参阅[提示部分]（#promining））。
+您还可以查看[示例文件夹]（示例），了解如何将EasyTranslate用于不同模型的示例。
 
 ### M2M100
-**M2M100** is a multilingual encoder-decoder (seq-to-seq) model trained for Many-to-Many multilingual translation introduced in this [paper](https://arxiv.org/abs/2010.11125) and first released in [this](https://github.com/pytorch/fairseq/tree/master/examples/m2m_100) repository. 
->M2M100 can directly translate between 9,900 directions of 100 languages.
+**M2M100** 是基于论文[《Beyond English-Centric Multilingual Machine Translation》](https://arxiv.org/pdf/2010.11125.pdf)提出的多语言编码器-解码器模型，首次发布于[此代码库](https://github.com/pytorch/fairseq/tree/master/examples/m2m_100)。
+>M2M100 可直接在 100 种语言的 9,900 个方向之间进行翻译。
 
 - **Facebook/m2m100_418M**: <https://huggingface.co/facebook/m2m100_418M>
 
@@ -60,10 +60,10 @@ You can also see [the examples folder](examples) for examples of how to use Easy
 
 ### NLLB200
 
-**No Language Left Behind (NLLB)** open-sources models capable of delivering high-quality translations directly between any pair of 200+ languages — including low-resource languages like Asturian, Luganda, Urdu and more. It aims to help people communicate with anyone, anywhere, regardless of their language preferences. It was introduced in this [paper](https://research.facebook.com/publications/no-language-left-behind/) and first released in [this](https://github.com/facebookresearch/fairseq/tree/nllb) repository.
->NLLB can directly translate between +40,000 of +200 languages.
+**No Language Left Behind（NLLB）：**开源模型能够直接在200多种语言之间提供高质量的翻译，包括阿斯图里亚斯语、卢安达语、乌尔都语等低资源语言。它旨在帮助人们在任何地方与任何人交流，无论他们的语言偏好如何。本文对此进行了介绍(https://research.facebook.com/publications/no-language-left-behind/)首次发布于[此](https://github.com/facebookresearch/fairseq/tree/nllb)存储库。
+>NLLB可以直接翻译200多种语言中的40000多种。
 
-- **facebook/nllb-moe-54b**: <https://huggingface.co/facebook/nllb-moe-54b> (Requires transformers 4.28.0)
+- **facebook/nllb-moe-54b**: <https://huggingface.co/facebook/nllb-moe-54b> (需要 transformers 4.28.0)
 
 - **facebook/nllb-200-3.3B**: <https://huggingface.co/facebook/nllb-200-3.3B>
 
@@ -73,16 +73,17 @@ You can also see [the examples folder](examples) for examples of how to use Easy
 
 - **facebook/nllb-200-distilled-600M**: <https://huggingface.co/facebook/nllb-200-distilled-600M>
 
-### Other MT Models supported
-We support every MT model in the 🤗 Hugging Face's Hub. If you find a model that doesn't work, please open an issue for us to fix it or a PR with the fix. This includes, among many others:
+###支持的其他MT型号
+我们支持 🤗 Hugging Face仓库中的每种MT模型。
+如果你发现一个模型不起作用，请为我们打开一个问题来修复它，或者打开一个带有修复的PR。其中包括：
 - **Small100**: <https://huggingface.co/alirezamsh/small100>
-- **Mbart many-to-many / many-to-one**: <https://huggingface.co/facebook/mbart-large-50-many-to-many-mmt>
-- **Opus MT**: <https://huggingface.co/Helsinki-NLP/opus-mt-es-en>
+- **Mbart 多对多 / 多对一**: <https://huggingface.co/facebook/mbart-large-50-many-to-many-mmt>
+- **作品 MT**: <https://huggingface.co/Helsinki-NLP/opus-mt-es-en>
 
 
 
-## Citation
-If you use this software please cite
+## 引文
+如果您使用此软件，请引用
 ````
 @inproceedings{garcia-ferrero-etal-2022-model,
     title = "Model and Data Transfer for Cross-Lingual Sequence Labelling in Zero-Resource Settings",
@@ -99,32 +100,34 @@ If you use this software please cite
 }
 ````
 
-## Requirements
+## 要求
 
 ```
 Pytorch >= 1.10.0 
-See: https://pytorch.org/get-started/locally/
+请参阅: https://pytorch.org/get-started/locally/
 
 Accelerate >= 0.12.0
 pip install accelerate
 
 HuggingFace Transformers 
-If you plan to use NLLB200, please use >= 4.28.0, as an important bug was fixed in this version. 
+如果你计划使用 NLLB200, 请使用 >= 4.28.0 版本, 因为此版本修复了重大BUG. 
 pip install --upgrade transformers
 
-BitsAndBytes (Optional, required for 8-bits / 4-bits quantization)
+BitsAndBytes (可选, required for 8-bits / 4-bits quantization)
 pip install bitsandbytes
 
-PEFT (Optional, required for loading LoRA models)
+PEFT (可选, 加载LoRA型号时需要)
 pip install peft
 ```
 
-## Translate a file
+## 翻译文件
 
-Run `python translate.py -h` for more info.   
-See [the examples folder](examples) for examples of how to run different models.
+运行 `python translate.py -h` 获取更多信息.   
 
-#### Using a single CPU / GPU
+# 有关如何运行不同模型的示例，请参阅[示例文件夹]（示例）#
+See [the examples folder](examples) for examples of how to run different models. 
+
+#### 使用单个CPU/GPU
 
 ```bash
 python3 translate.py \
@@ -135,11 +138,11 @@ python3 translate.py \
 --model_name facebook/m2m100_1.2B
 ```
 
+#### 使用多个CPU/GPU
 #### Multi-GPU
 
-See Accelerate documentation for more information (multi-node, TPU, Sharded model...): <https://huggingface.co/docs/accelerate/index>  
-You can use the Accelerate CLI to configure the Accelerate environment (Run `accelerate config` in your terminal) instead of using the `--multi_gpu and --num_processes` flags.
-
+有关更多信息（多节点、TPU、分片模型…），请参阅Accelerate文档：: <https://huggingface.co/docs/accelerate/index>  
+您可以使用Accelerate CLI配置Accelerate环境（在终端中运行`Accelerate config`），而不是使用`-multi_gpu和--num_processes`标志。
 ```bash
 # Use 2 GPUs
 accelerate launch --multi_gpu --num_processes 2 --num_machines 1 translate.py \
@@ -150,15 +153,14 @@ accelerate launch --multi_gpu --num_processes 2 --num_machines 1 translate.py \
 --model_name facebook/m2m100_1.2B
 ```
 
+####自动批量查找器
 
-#### Automatic batch size finder
+我们将自动找到适合您GPU内存的批量大小。默认的初始批大小为128（您可以使用“--starting_batch_size 128”标志进行设置）。如果我们发现内存不足错误，我们将自动减小批大小，直到找到一个可用的批大小。
 
-We will automatically find a batch size that fits in your GPU memory. The default initial batch size is 128 (You can set it with the `--starting_batch_size 128` flag). If we find an Out Of Memory error, we will automatically decrease the batch size until we find a working one.
+### 加载大型模型
 
-### Loading Huge Models
-
-Huge models such as LLaMA 65B or nllb-moe-54b can be loaded in a single GPU with 8 bits and 4 bits quantification with minimal performance degradation. 
-See [BitsAndBytes](https://github.com/TimDettmers/bitsandbytes). Set precision to 8 or 4 with the `--precision` flag. 
+通过 8-bit 和 4-bit 量化技术，可以在单 GPU 上加载 LLaMA 65B 或 nllb-moe-54b 等超大规模模型，且性能损失极小。
+详见 [BitsAndBytes](https://github.com/TimDettmers/bitsandbytes)。使用 `--precision` 参数设置精度为 8 或 4。
 
 ```bash
 pip install bitsandbytes
@@ -174,17 +176,17 @@ python3 translate.py \
 --starting_batch_size 8
 ```
 
-If even the quantified model does not fit in your GPU memory, you can set the `--force_auto_device_map` flag. 
-The model will be split across GPUs and CPU to fit it in memory. CPU offloading is slow, but will allow you to run huge models that do not fit in your GPU memory.
+若量化后的模型仍无法放入 GPU 显存，可设置 `--force_auto_device_map` 参数。
+该功能会将模型拆分到多个 GPU 和 CPU 内存中，虽然 CPU 卸载会降低速度，但能运行远超单卡显存容量的大型模型。
 
 
 
-### Prompting
+###提示
 
-You can use LLMs such as LLaMA, Vicuna, GPT2, FlanT5, etc, instead of a translation model. These models require 
-a prompt to define the task. You can either have the prompt already in the input file (each sentence includes the prompt) 
-or you can use the `--prompt` flag to add the prompt to each sentence. In this case, you need to include the token %%SENTENCE%% in the prompt. 
-This token will be replaced by the sentence to translate. You do not need to specify the `--source_lang` and `--target_lang` flags in this case.
+您可以使用LLMs，如LLaMA、Vicuna、GPT2、FlanT5等，而不是翻译模型。这些模型需要
+定义任务的提示。您可以在输入文件中已有提示（每句话都包含提示）
+或者，您可以使用“--prompt”标志将提示添加到每个句子中。在这种情况下，您需要在提示中包含标记%%SENTENCE%%。
+此标记将被要翻译的句子替换。在这种情况下，您不需要指定“--source_lang”和“--target_lang”标志。
 
 ```bash
 python3 translate.py \
@@ -195,11 +197,11 @@ python3 translate.py \
 ``` 
 
 
-### Decoding/Sampling strategies
+###解码/采样策略
 
-You can choose the decoding/sampling strategy to use and the number of candidate translations to output for each input sentence. 
-By default, we will use beam-search with `num_beams` set to 5, and we will output the most likely candidate translation. This should be the best 
-configuration for most use cases. You can change this behaviour with the following flags:
+您可以选择要使用的解码/采样策略以及每个输入句子要输出的候选翻译数量。
+默认情况下，我们将使用“num_beams”设置为5的beam搜索，并输出最可能的候选翻译。这应该是最好的了
+大多数用例的配置。您可以使用以下标志更改此行为：
 
 ```bash
 --num_beams: Number of beams to use for beam-search decoding (default: 5)
@@ -212,13 +214,14 @@ configuration for most use cases. You can change this behaviour with the followi
 --keep_tokenization_spaces: Whether to keep tokenization spaces (default: False)
 --num_return_sequences: Number of candidate translations to output for each input sentence (default: 1)
 ```
-Please, note that running `--do_sample` with `--num_beams` > 1 and `8 bits` or `4 bits` quantification may be numerically unstable and produce an error. 
+请注意，运行`--do_sample`，其中`--num_beams`>1和`8 bits`或`4 bits`量化可能在数值上不稳定并产生错误。
 
-## Evaluate translations
 
-To run the evaluation script you need to install [bert_score](https://github.com/Tiiiger/bert_score): `pip install bert_score` and 🤗HuggingFace's [Evaluate](https://huggingface.co/docs/evaluate) model: `pip install evaluate`.
+## 评估翻译
 
-The evaluation script will calculate the following metrics:
+要运行评估脚本，您需要安装 [bert_score](https://github.com/Tiiiger/bert_score): `pip install bert_score` 和 🤗HuggingFace [Evaluate](https://huggingface.co/docs/evaluate) 的模型: `pip install evaluate`.
+
+评估脚本将计算以下指标：
 
 - [SacreBLEU](https://github.com/huggingface/datasets/tree/master/metrics/sacrebleu)
 - [BLEU](https://github.com/huggingface/datasets/tree/master/metrics/bleu)
@@ -227,7 +230,7 @@ The evaluation script will calculate the following metrics:
 - [TER](https://github.com/huggingface/datasets/tree/master/metrics/ter)
 - [BertScore](https://github.com/huggingface/datasets/tree/master/metrics/bertscore)
 
-Run the following command to evaluate the translations:
+运行以下命令以评估翻译：
 
 ```bash
 python3 eval.py \
@@ -235,7 +238,7 @@ python3 eval.py \
 --gold_path sample_text/es.txt 
 ```
 
-If you want to save the results to a file use the `--output_path` flag.
+如果要将结果保存到文件中，请使用`--output_path`标志。
 
-See [sample_text/en2es.m2m100_1.2B.json](sample_text/en2es.m2m100_1.2B.json) for a sample output.
+有关示例输出，请参阅[sample_text/en2es.m2m100_1.2B.json]（sample_text/en2 es.m2m100_1.2B.json）。
 
